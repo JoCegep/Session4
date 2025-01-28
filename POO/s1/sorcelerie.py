@@ -59,41 +59,41 @@ def donner_mission(lst_missions, grimoire):
     :param grimoire: Liste de sorts les contenant en forme de dictionnaires.
     :return: None
     """
-    while True:
-        mission = random.choice(lst_missions)
-        sorts_interdits = input(f"Votre mission: {mission["description"]}\n"
-                                f"Utiliser les sorts interdits? (O/N): ").upper()
-        num = 1
-        match sorts_interdits: # montrer la liste de choix à l'utilisateur
-            case "O":
-                for sort in grimoire:
-                    if sort["interdit"]:
-                        print(f"{num}. {sort['nom']} (interdit)") # distinguer les sorts interdits des sorts normaux
-                    else:
-                        print(f"{num}. {sort['nom']}") # sorts normaux
-                    num += 1 # incrémenter pour le prochain nombre dans la liste
-            case "N":
-                for sort in grimoire:
-                    if not sort["interdit"]: # montrer la liste si l'utilisateur décide de ne pas utiliser de sorts interdits
-                        print(f"{num}. {sort['nom']}")
-                        num += 1
-        # choix de l'utilisateur
-        choix = input("Choisissez les sorts [ex: 1,4]: ")
-        for sort in choix.split(","): # validation de chaque sort utilisé par l'utilisateur
-            if grimoire[int(sort)-1]["type"] in mission["sorts_requis"]:
-                if grimoire[int(sort) - 1]["interdit"]:
-                    num = random.randint(0,1000) # 50% de chance qu'un sort interdit tourne mal
-                    if num % 2 == 0:
-                        print("BOOM!")
-                        break
-                    else: # enlever les sorts de la liste de sorts requis s'ils ont le bon type
-                        mission["sorts_requis"].remove(grimoire[int(sort)-1]["type"])
+    mission = random.choice(lst_missions)
+    sorts_interdits = input(f"Votre mission: {mission["description"]}\n"
+                            f"Utiliser les sorts interdits? (O/N): ").upper()
+    num = 1
+    match sorts_interdits: # montrer la liste de choix à l'utilisateur
+        case "O":
+            for sort in grimoire:
+                if sort["interdit"]:
+                    print(f"{num}. {sort['nom']} (interdit)") # distinguer les sorts interdits des sorts normaux
                 else:
-                    mission["sorts_requis"].remove(grimoire[int(sort) - 1]["type"])
+                    print(f"{num}. {sort['nom']}") # sorts normaux
+                num += 1 # incrémenter pour le prochain nombre dans la liste
+        case "N":
+            for sort in grimoire:
+                if not sort["interdit"]: # montrer la liste si l'utilisateur décide de ne pas utiliser de sorts interdits
+                    print(f"{num}. {sort['nom']}")
+                    num += 1
+    # choix de l'utilisateur
+    choix = input("Choisissez les sorts [ex: 1,4]: ")
+    for sort in choix.split(","): # validation de chaque sort utilisé par l'utilisateur
+        if grimoire[int(sort)-1]["type"] in mission["sorts_requis"]:
+            if grimoire[int(sort) - 1]["interdit"]:
+                explosion = random.choice([True, False]) # 50% de chance qu'un sort interdit tourne mal
+                if explosion:
+                    print("BOOM!")
+                    break
+                else: # enlever les sorts de la liste de sorts requis s'ils ont le bon type
+                    mission["sorts_requis"].remove(grimoire[int(sort)-1]["type"])
+            else:
+                mission["sorts_requis"].remove(grimoire[int(sort) - 1]["type"])
 
-        if not mission["sorts_requis"]: # si tous les bons types de sorts ont été bien utilisés
-            print("Vous avez vaincu la menace et gagné l'admiration du royaume ! 🤩")
-        else: # sinon
-            print("Well you can't expect to win em all.. :(")
+    if not mission["sorts_requis"]: # si tous les bons types de sorts ont été bien utilisés
+        print("Vous avez vaincu la menace et gagné l'admiration du royaume ! 🤩")
+    else: # sinon
+        print("Well you can't expect to win em all.. :(")
+
 if __name__ == "__main__":
     donner_mission(missions, grimoire)
