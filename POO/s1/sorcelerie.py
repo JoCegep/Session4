@@ -52,16 +52,22 @@ missions: list[dict[str, str | list[str]]] = \
             "sorts_requis": ["Destruction", "Soin"],
         }
     ]
-def donner_mission(lst_missions, grimoire):
+
+    # Le nom de la fonction n'est pas représentatif. 
+    # Ça donne la mission, ça choisit les sorts, ça valide et résout la mission.
+    # Trop de choses différentes dans la même fonction.
+def donner_mission():
+    # La description est imprécise et ne représente pas tout ce que la fonction fait.
     """
     Effectue toutes les opérations pour assurer le fonctionnement de la mission
-    :param lst_missions: Liste de missions les contenant en forme de dictionnaires.
-    :param grimoire: Liste de sorts les contenant en forme de dictionnaires.
     :return: None
     """
     mission = random.choice(lst_missions)
     sorts_interdits = input(f"Votre mission: {mission["description"]}\n"
-                            f"Utiliser les sorts interdits? (O/N): ").upper()
+                            f"Utiliser les sorts interdits? (O/N): ").upper().strip()
+    
+    
+    # Tu ne tri pas les sorts selon le type pour la mission, tu affiches les sorts (à moins qu'ils soient interdits)
     num = 1
     match sorts_interdits: # montrer la liste de choix à l'utilisateur
         case "O":
@@ -90,10 +96,15 @@ def donner_mission(lst_missions, grimoire):
             else:
                 mission["sorts_requis"].remove(grimoire[int(sort) - 1]["type"])
 
+    # Intéressant l'idée d'enlever les sorts au fur et à mesure
     if not mission["sorts_requis"]: # si tous les bons types de sorts ont été bien utilisés
         print("Vous avez vaincu la menace et gagné l'admiration du royaume ! 🤩")
     else: # sinon
         print("Well you can't expect to win em all.. :(")
 
 if __name__ == "__main__":
-    donner_mission(missions, grimoire)
+    donner_mission()  # Pas besoin de donner les paramètres, ces variables sont globales
+
+# Je ne l'ai pas exécuté, mais globalement le code est bien, le point principal à améliorer est de créer des fonctions
+# pour diviser et organiser ton code. L'idéale est qu'en regardant le main c'est un peu comme lire la structure de l'application
+# On voit toutes les étapes, mais pas le détail.
